@@ -21,6 +21,7 @@ import {
 } from "../services/services";
 import { SalesContext } from "../Contex/SalesContext";
 import { Link } from '@mui/material';
+import ImagenFull from '../ImagenFull/ImagenFull';
 
 
 
@@ -75,6 +76,28 @@ export default function BodyStore() {
             console.log(e);
         });
     }
+
+
+
+    /* Funciones de imagnes */
+
+    const [open, setOpen] = useState(false);
+    const [src, setSrc] = useState('');
+
+    function showImg(e){
+        setOpen(true);
+        setSrc(e.target.src);
+        console.log(e.target.src);
+        
+
+    }
+
+
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+
 
     useEffect(() => {
         getAllProducts();
@@ -140,6 +163,8 @@ export default function BodyStore() {
                         <Grid item md={4} sm={12} key={pro.idarticulos}>
                             <Card>
                                 <CardMedia
+                                    value={pro.img}
+                                    onClick={showImg}
                                     component="img"
                                     height="300"
                                     image={pro.img}
@@ -187,6 +212,7 @@ export default function BodyStore() {
                     ))}
             </Grid>
             <Box display="flex" p={4}>
+                <ImagenFull open={open} src={src} handleClose={handleClose} />
             </Box>
         </Grid>
     </>;
