@@ -12,7 +12,8 @@ const ventas = {
     idPedido: 0,
     shipping_cost: {
         us: 2500,
-        mx: 400
+        mx: 400,
+        ca: 3200
     },
     carrito: []
 }

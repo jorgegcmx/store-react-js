@@ -36,7 +36,7 @@ export default function BodyStore() {
     } = useContext(SalesContext);
 
     const [productos, setProductos] = useState();
-  
+
 
     function getAllProducts() {
         getProducts()
@@ -84,18 +84,18 @@ export default function BodyStore() {
     const [open, setOpen] = useState(false);
     const [src, setSrc] = useState('');
 
-    function showImg(e){
+    function showImg(e) {
         setOpen(true);
         setSrc(e.target.src);
         console.log(e.target.src);
-        
+
 
     }
 
 
-  
+
     const handleClose = () => {
-      setOpen(false);
+        setOpen(false);
     };
 
 
@@ -109,7 +109,7 @@ export default function BodyStore() {
                     setcoutrie('MX');
                 }
             });
-        
+
         if (venta.transId !== 0) {
             Save();
             console.log(venta);
@@ -121,7 +121,7 @@ export default function BodyStore() {
                 window.location.href = `https://www.mercadopago.com.mx/checkout/v1/payment/redirect/155e0724-68d3-4431-97dd-3621785cd626/payment-option-form/?preference-id=${e}`;
             }).catch(e => console.log(e)).finally(() => {
                 setloader(false);
-              });;
+            });;
         }
 
     }, [venta]);
@@ -138,10 +138,23 @@ export default function BodyStore() {
                                 sx={{ mr: 2 }}
                             />
                             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                                Hacemos envíos a USA
+                                We ship to the USA, pay with Paypal
                             </Typography>
                         </>
-                    ) : (
+                    ) : null}
+                    {coutrie === 'CA' ? (
+                        <>
+                            <Avatar alt="envios USA"
+                                src="https://tucatalogoweb.com/venta/admin/view_clientes/services/canada_flag.png"
+                                sx={{ mr: 2 }}
+                            />
+                            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                                We ship to the Canada, pay with Paypal
+                            </Typography>
+                        </>
+                    ) : null}
+
+                    {coutrie === 'MX' ? (
                         <>
                             <Avatar alt="envios USA"
                                 src="https://ceramicachecuan.com/logo/mx_flag.png"
@@ -151,7 +164,8 @@ export default function BodyStore() {
                                 Hacemos envíos a todo México
                             </Typography>
                         </>
-                    )}
+                    ) : null}
+
 
 
                 </Toolbar>

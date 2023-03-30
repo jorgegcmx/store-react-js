@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
@@ -131,7 +131,7 @@ export default function CarStore() {
       transId: id,
       status: status,
       carrito: cartItems,
-      total: coutrie === 'MX' ? calculateSubTotal(cartItems) + venta.shipping_cost.mx : calculateSubTotal(cartItems) + venta.shipping_cost.us,
+      total: coutrie === 'MX' ? calculateSubTotal(cartItems) + venta.shipping_cost.mx : coutrie === 'CA' ? calculateSubTotal(cartItems) + venta.shipping_cost.ca : calculateSubTotal(cartItems) + venta.shipping_cost.us,
       datos_envio: infotoSend,
       email_cliente: infotoSend.email
     });
@@ -141,13 +141,13 @@ export default function CarStore() {
     setVenta({
       ...venta,
       carrito: cartItems,
-      total: coutrie === 'MX' ? calculateSubTotal(cartItems) + venta.shipping_cost.mx : calculateSubTotal(cartItems) + venta.shipping_cost.us,
+      total: coutrie === 'MX' ? calculateSubTotal(cartItems) + venta.shipping_cost.mx : coutrie === 'CA' ? calculateSubTotal(cartItems) + venta.shipping_cost.ca : calculateSubTotal(cartItems) + venta.shipping_cost.us,
       datos_envio: infotoSend,
       email_cliente: infotoSend.email,
     });
   }
 
- 
+
   function ShowOptionsPay() {
     valida().then((res) => {
       if (res === 0) {
@@ -187,7 +187,7 @@ export default function CarStore() {
     currency: "MXN",
     intent: "capture",
   };
-//ATgNBVuCxrIqYtuaj-FO70_TN4A_AKmSaPxb4cjd5UFyohojKUPNz4K7vQrHwgyPrVglnIblVCNMSDFJ
+  //ATgNBVuCxrIqYtuaj-FO70_TN4A_AKmSaPxb4cjd5UFyohojKUPNz4K7vQrHwgyPrVglnIblVCNMSDFJ
 
   return (
     <div>
@@ -230,23 +230,24 @@ export default function CarStore() {
                     edge="start"
                     endIcon={<LocalShippingIcon />}
                     style={{
+                      fontSize: "15px",
                       width: "300px",
                       textTransform: "none",
                       marginTop: "5px",
                       marginBottom: "5px",
-                      backgroundColor: "#FFC300",
-                      color: "black",
+                      backgroundColor: "#2968C8",
+                      color: "white",
                     }}
                     size="large"
                   >
-                    Agrega los datos para envío
+                    Continuar con la compra
                   </Button>
                 </Item>
               </Grid>
 
               <Grid item md={6} xs={12}>
                 <Item>
-                  <Alert severity="info"
+                  <Alert severity="success"
                     style={{
                       marginRight: "5px"
                     }}>
@@ -261,11 +262,12 @@ export default function CarStore() {
 
               <Grid item md={6} xs={12}>
                 <Item >
-                  <Alert severity="success"
+                  <Alert severity="info"
+                    variant="outlined"
                     style={{
                       marginRight: "5px"
                     }}>
-                    <strong>Resumen de tu orden!</strong>
+                    <strong>Resumen de tu compra!</strong>
                   </Alert>
                   <List
                     sx={{ maxWidth: 360, bgcolor: 'background.paper', padding: '0px', margin: '0px' }}
@@ -276,11 +278,21 @@ export default function CarStore() {
                     </ListItem>
                     <ListItem disablePadding={true}>
                       <ListItemText primary="Costo de envío:" />
-                      {coutrie === 'MX' ? (<b>{Formater(venta.shipping_cost.mx)}</b>) : (<b>{Formater(venta.shipping_cost.us)}</b>)}
+                      {coutrie === 'MX' ? (<b>{Formater(venta.shipping_cost.mx)}</b>) : null}
+                      {coutrie === 'CA' ? (<b>{Formater(venta.shipping_cost.ca)}</b>) : null}
+                      {coutrie === 'USA' ? (<b>{Formater(venta.shipping_cost.us)}</b>) : null}
                     </ListItem>
                     <ListItem disablePadding={true}>
                       <ListItemText primary="Total:" />
-                      <h3><b>{coutrie === 'MX' ? Formater(calculateSubTotal(cartItems) + venta.shipping_cost.mx) : Formater(calculateSubTotal(cartItems) + venta.shipping_cost.us)}</b></h3>
+                      <h3><b>{
+                        coutrie === 'MX' ?
+                          Formater(calculateSubTotal(cartItems) + venta.shipping_cost.mx)
+                          :
+                          coutrie === 'CA' ?
+                            Formater(calculateSubTotal(cartItems) + venta.shipping_cost.ca)
+                            :
+                            Formater(calculateSubTotal(cartItems) + venta.shipping_cost.us)
+                      }</b></h3>
                     </ListItem>
                   </List>
                 </Item>
@@ -315,13 +327,14 @@ export default function CarStore() {
             startIcon={<CloseRoundedIcon />}
           />
 
-          {coutrie === 'US' ? (
+          {coutrie === 'MX' ? (
             <>
-              {!openOptionPayment ? ('Ingresa los datos para el envío') : ('Formas de pago disponible para: ')} {coutrie}
+              {openOptionPaymentMX ? ('') : ('Continuar con la compra')}
+
             </>
           ) : (
             <>
-              {openOptionPaymentMX ? ('') : ('Ingresa los datos para el envío')}
+              {!openOptionPayment ? ('continue shopping') : ('Payment methods available for: ')} {coutrie}
             </>
           )}
 
@@ -442,7 +455,7 @@ export default function CarStore() {
             <>
               {
                 openOptionPayment ? (
-                  <>                  
+                  <>
                     <PayPalScriptProvider options={initialOptions} >
                       <PayPalButtons
                         createOrder={(data, actions) => {
@@ -491,7 +504,7 @@ export default function CarStore() {
           )}
 
           {
-           // <pre>{JSON.stringify({ venta }, null, 2)}</pre>
+            // <pre>{JSON.stringify({ venta }, null, 2)}</pre>
           }
         </DialogContent>
       </Dialog >
