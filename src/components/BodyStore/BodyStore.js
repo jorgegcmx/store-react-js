@@ -127,7 +127,7 @@ export default function BodyStore() {
     }, [venta]);
 
     return <>
-        <Grid item xs={12}>
+        <Grid item xs={12} >
 
             <AppBar position="static" color="transparent">
                 <Toolbar>
@@ -166,12 +166,10 @@ export default function BodyStore() {
                         </>
                     ) : null}
 
-
-
                 </Toolbar>
             </AppBar>
 
-            <Grid container p={4} spacing={2}>
+            <Grid container p={4} spacing={2} style={{backgroundColor:'#EDEDED'}}>
                 {productos !== undefined &&
                     productos.map((pro) => (
                         <Grid item md={4} sm={12} key={pro.idarticulos}>

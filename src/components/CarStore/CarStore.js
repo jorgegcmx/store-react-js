@@ -25,6 +25,7 @@ import { useStateWithDep } from '../customHooks/ReloadEffect';
 import {
   savedSale
 } from "../services/services";
+import BodyStore from '../BodyStore/BodyStore';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -37,6 +38,14 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
 
+
+const ItemOrden = styled(Paper)(({ theme }) => ({
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'right',
+  paddingLeft: '10px',
+  color: theme.palette.text.primary,
+}));
 
 
 export default function CarStore() {
@@ -196,72 +205,92 @@ export default function CarStore() {
         open={openCar}
         onClose={handleClose}
         TransitionComponent={Transition}
+
       >
 
-        <Grid container spacing={1}>
-          <Grid item md={6} xs={12} >
-            <Item>
-              <Button
-                onClick={handleClose}
-                variant="contained"
-                edge="start"
-                startIcon={<SettingsBackupRestoreIcon />}
-                style={{
-                  marginRight: "10px",
-                  marginTop: "5px",
-                  marginBottom: "5px",
-                  textTransform: "none",
-                  backgroundColor: "#E3E6E6",
-                  color: "black",
-                }}
-                size="large"
-              >
-                Seguir comprando
-              </Button>
-            </Item>
-          </Grid>
+        <Grid container spacing={1} style={{ backgroundColor: '#EDEDED',paddingBottom:'40px' }}>
+          {cartItems.length === 0 ? (
+            <Grid item md={12} xs={12}>
+              <Item>
+                <Button
+                  onClick={handleClose}
+                  variant="contained"
+                  edge="start"
+                  startIcon={<SettingsBackupRestoreIcon />}
+                  style={{
+                    marginRight: "10px",
+                    marginTop: "5px",
+                    marginBottom: "5px",
+                    textTransform: "none",
+                    backgroundColor: "#E3E6E6",
+                    color: "black",
+                  }}
+                  size="large"
+                >
+                  Seguir comprando
+                </Button>
+              </Item>
+            </Grid>
+          ) : null}
+
           {cartItems.length !== 0 ? (
             <>
-              <Grid item md={6} xs={12}>
-                <Item>
-                  <Button
-                    onClick={handleOpen}
-                    variant="contained"
-                    edge="start"
-                    endIcon={<LocalShippingIcon />}
-                    style={{
-                      fontSize: "15px",
-                      width: "300px",
-                      textTransform: "none",
-                      marginTop: "5px",
-                      marginBottom: "5px",
-                      backgroundColor: "#2968C8",
-                      color: "white",
-                    }}
-                    size="large"
-                  >
-                    Continuar con la compra
-                  </Button>
-                </Item>
-              </Grid>
-
-              <Grid item md={6} xs={12}>
+              <Grid item md={12} xs={12}  >
                 <Item>
                   <Alert severity="success"
                     style={{
                       marginRight: "5px"
                     }}>
-                    <strong>Estas apunto de adquirir piezas unícas!
-                      <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
-                        3 MESES SIN INTERESES
-                      </Typography> en pagos con tarjeta.
-                    </strong>
+
+                    <Typography variant="body2" component="div" sx={{ flexGrow: 1 }}>
+                      Estas apunto de adquirir piezas unícas!, ademas puedes pagar a
+                      3 meses sin intereses, en pagos con tarjeta.
+                    </Typography>
+
                   </Alert>
                 </Item>
               </Grid>
-
+              <Grid item md={12} xs={12} >
+                <Item>
+                  <Button
+                    onClick={handleClose}
+                    variant="contained"
+                    edge="start"
+                    startIcon={<SettingsBackupRestoreIcon />}
+                    style={{
+                      marginRight: "10px",
+                      marginTop: "5px",
+                      marginBottom: "5px",
+                      textTransform: "none",
+                      backgroundColor: "#FFD814",
+                      color: "black",
+                    }}
+                    size="large"
+                  >
+                    Seguir comprando
+                  </Button>
+                </Item>
+              </Grid>
               <Grid item md={6} xs={12}>
-                <Item >
+                <ItemOrden>
+                <Alert severity="info"
+                    variant="outlined"
+                    style={{
+                      marginRight: "5px",
+                      marginBottom:"5px"
+                    }}>
+                    <strong>Piezas en tu carrito</strong>
+                  </Alert>
+                  {cartItems.map((item) => (
+                    <Items
+                      key={item.idarticulos}
+                      item={item}
+                    />
+                  ))}
+                </ItemOrden>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <ItemOrden>
                   <Alert severity="info"
                     variant="outlined"
                     style={{
@@ -295,7 +324,25 @@ export default function CarStore() {
                       }</b></h3>
                     </ListItem>
                   </List>
-                </Item>
+                  <Button
+                    onClick={handleOpen}
+                    variant="contained"
+                    edge="start"
+                    endIcon={<LocalShippingIcon />}
+                    style={{
+                      fontSize: "15px",
+                      width: "300px",
+                      textTransform: "none",
+                      marginTop: "5px",
+                      marginBottom: "5px",
+                      backgroundColor: "#2968C8",
+                      color: "white",
+                    }}
+                    size="large"
+                  >
+                    Continuar con la compra
+                  </Button>
+                </ItemOrden>
               </Grid>
             </>
           ) : null}
@@ -307,15 +354,9 @@ export default function CarStore() {
         </Alert>) : (<>
 
         </>)}
-        {cartItems.map((item) => (
-          <Items
-            key={item.idarticulos}
-            item={item}
-          />
-        ))}
+
+        {/* <BodyStore></BodyStore>*/}
       </Dialog>
-
-
       <Dialog open={open} >
         <DialogTitle>
           <Button onClick={handleCloseForm}
